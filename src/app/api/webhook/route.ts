@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { prisma } from "@/lib/prisma";
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -37,12 +39,14 @@ export async function GET(req: Request) {
       );
     }
 
-    const data = await response.json();
+    const { data }: WebhookDataResponse = await response.json();
 
-    console.log("Resposta da API: ", data);
+    console.log("Webhook Data: ", { data });
+
+    const webhook = await prisma.webhookData.create({ data });
 
     return NextResponse.json(
-      { message: "Webhook processado com sucesso", data },
+      { message: "Webhook processado com sucesso", webhook },
       { status: 200 }
     );
   } catch (error) {
