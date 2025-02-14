@@ -22,3 +22,10 @@ model WebhookData {
   @@index([status])
   @@index([createdAt])
 }
+
+model Streak {
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  streak         Int
+  lastOpenedDate DateTime
+}

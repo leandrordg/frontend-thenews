@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { updateStreak } from "@/hooks/streak";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-
-    console.log("Search Params: ", searchParams);
 
     const email = searchParams.get("email");
     const id = searchParams.get("id");
@@ -20,7 +19,6 @@ export async function GET(req: Request) {
 
     console.log("Webhook recebido: ", { email, id });
 
-    // Enviar POST para API de exemplo
     const response = await fetch(
       "https://backend.testeswaffle.org/webhooks/case/subscribe",
       {
@@ -41,7 +39,7 @@ export async function GET(req: Request) {
 
     const { data }: WebhookDataResponse = await response.json();
 
-    console.log("Webhook Data: ", { data });
+    console.log("Response data: ", { data });
 
     const webhook = await prisma.webhookData.create({
       data: {
@@ -56,6 +54,10 @@ export async function GET(req: Request) {
         createdAt: new Date(data.created_at),
       },
     });
+
+    console.log("Webhook Data: ", { webhook });
+
+    await updateStreak(data.email);
 
     return NextResponse.json(
       { message: "Webhook processado com sucesso", webhook },
