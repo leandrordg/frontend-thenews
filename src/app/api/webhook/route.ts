@@ -43,7 +43,19 @@ export async function GET(req: Request) {
 
     console.log("Webhook Data: ", { data });
 
-    const webhook = await prisma.webhookData.create({ data });
+    const webhook = await prisma.webhookData.create({
+      data: {
+        id: data.id,
+        email: data.email,
+        status: data.status,
+        utmSource: data.utm_source,
+        utmMedium: data.utm_medium,
+        utmCampaign: data.utm_campaign,
+        utmChannel: data.utm_channel,
+        referringSite: data.referring_site,
+        createdAt: new Date(data.created_at),
+      },
+    });
 
     return NextResponse.json(
       { message: "Webhook processado com sucesso", webhook },

@@ -1,13 +1,13 @@
-type WebhookDataResponse = {
+interface WebhookDataResponse {
   data: {
     id: string;
     email: string;
     status: string;
-    utmSource?: string;
-    utmMedium?: string;
-    utmCampaign?: string;
-    utmChannel?: string;
-    referringSite?: string;
-    createdAt: string;
+    utm_source: string;
+    utm_medium: string;
+    utm_campaign: string;
+    utm_channel: string;
+    referring_site: string;
+    created_at: string;
   };
-};
+}
