@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { format, subDays } from "date-fns";
 
 export const getReaderStats = async (email: string) => {
   const streak = await prisma.streak.findUnique({
@@ -86,3 +87,46 @@ export const updateStreak = async (email: string) => {
     console.log("Streak inicializado para 1");
   }
 };
+
+export async function getStreakData(email: string) {
+  try {
+    const thirtyDaysAgo = subDays(new Date(), 30);
+
+    // Buscando o histórico de aberturas nos últimos 30 dias
+    const openHistory = await prisma.webhookData.findMany({
+      where: {
+        email,
+        createdAt: {
+          gte: thirtyDaysAgo,
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const streakData = [];
+
+    // Gerando dados para os últimos 30 dias
+    for (let i = 0; i < 30; i++) {
+      const currentDate = subDays(new Date(), i);
+      const formattedDate = format(currentDate, "yyyy-MM-dd");
+      const accessed = openHistory.some(
+        (entry) => format(entry.createdAt, "yyyy-MM-dd") === formattedDate
+      );
+
+      const isSunday = currentDate.getDay() === 0; // Verificando se é domingo (0 = domingo)
+
+      streakData.push({
+        date: formattedDate,
+        accessed,
+        isSunday,
+      });
+    }
+
+    return streakData;
+  } catch (error) {
+    console.error("Erro ao gerar o streak data: ", error);
+    return [];
+  }
+}
