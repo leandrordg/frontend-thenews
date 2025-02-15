@@ -17,6 +17,22 @@ interface WebhookDataResponse {
   };
 }
 
+export async function POST(req: Request) {
+  try {
+    // Extrair o corpo da requisição
+    const { email } = await req.json();
+
+    // Aqui você pode processar o e-mail como quiser
+    console.log("Recebido e-mail:", email);
+
+    // Retornar uma resposta de sucesso
+    return NextResponse.json({ message: "Sucesso!" }, { status: 200 });
+  } catch (error) {
+    console.error("Erro ao processar o webhook:", error);
+    return NextResponse.json({ message: "Erro interno" }, { status: 500 });
+  }
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
