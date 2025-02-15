@@ -85,8 +85,6 @@ export async function GET(req: Request) {
       },
     });
 
-    console.log("Webhook Data: ", { webhook });
-
     await updateStreak(data.email);
 
     return NextResponse.json(

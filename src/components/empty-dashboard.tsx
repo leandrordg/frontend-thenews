@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { ChevronRightIcon } from "lucide-react";
 
-import { MotivationalMessage } from "@/components/motivational-message";
 import { Button } from "@/components/ui/button";
 
 export function EmptyDashboard() {
@@ -15,7 +14,7 @@ export function EmptyDashboard() {
         esperando e comece a ler hoje mesmo!
       </p>
 
-      <MotivationalMessage streak={0} />
+      {/* <MotivationalMessage streak={0} /> */}
 
       <Button asChild>
         <Link href="https://thenewscc.beehiiv.com/">

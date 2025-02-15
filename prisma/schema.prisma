@@ -24,8 +24,17 @@ model WebhookData {
 }
 
 model Streak {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  streak         Int
-  lastOpenedDate DateTime
+  id          String    @id @default(cuid())
+  email       String    @unique
+  streakStart DateTime
+  streakEnd   DateTime?
+  streakDays  Int
+  status      String    @default("ativo")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([streakStart])
+  @@index([streakEnd])
 }

@@ -1,28 +1,20 @@
-import { getStreakRanking } from "@/hooks/streak";
 import { getUserStats } from "@/hooks/user";
-import { formatDate, formatStreaks } from "@/lib/utils";
 import { CalendarIcon, ClockIcon, MailIcon } from "lucide-react";
 
 import { EmptyDashboard } from "@/components/empty-dashboard";
-import { HistoryCalendar } from "@/components/history-calendar";
 import { MotivationalMessage } from "@/components/motivational-message";
-import { MotivationalRankingMessage } from "@/components/motivational-ranking-message";
-import { columns } from "@/components/streaks/columns";
-import { DataTable } from "@/components/streaks/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
-  const { streak, history, lastOpen, openHistory } = await getUserStats();
+  const { streaks, openedNews } = await getUserStats();
 
-  const streakRanking = await getStreakRanking();
-
-  if (!openHistory) return <EmptyDashboard />;
+  if (!streaks.length && !openedNews.length) return <EmptyDashboard />;
 
   return (
     <main className="max-w-7xl mx-auto p-4 py-16 space-y-8">
       <h1 className="text-2xl font-bold tracking-tight">Dashboard do leitor</h1>
 
-      <MotivationalMessage streak={streak} />
+      <MotivationalMessage streaks={streaks} />
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -33,7 +25,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{formatStreaks(streak)}</p>
+            {/* <p className="text-2xl font-bold">{formatStreaks(streak)}</p> */}
             <p className="text-xs text-muted-foreground">
               Continue lendo diariamente!
             </p>
@@ -49,7 +41,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{openHistory.length}</p>
+            {/* <p className="text-2xl font-bold">{openHistory.length}</p> */}
             <p className="text-xs text-muted-foreground">Newsletters lidas</p>
           </CardContent>
         </Card>
@@ -63,7 +55,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{formatDate(lastOpen)}</p>
+            {/* <p className="text-2xl font-bold">{formatDate(lastOpen)}</p> */}
             <p className="text-xs text-muted-foreground">
               Leitura mais recente
             </p>
@@ -76,7 +68,7 @@ export default async function DashboardPage() {
           Seu histórico de leituras diárias
         </h2>
 
-        <HistoryCalendar history={history} />
+        {/* <HistoryCalendar history={history} /> */}
       </section>
 
       <section className="space-y-6">
@@ -86,9 +78,9 @@ export default async function DashboardPage() {
           lendo diariamente para subir no ranking!
         </p>
 
-        <MotivationalRankingMessage streakRanking={streakRanking} />
+        {/* <MotivationalRankingMessage ranking={ranking} /> */}
 
-        <DataTable columns={columns} data={streakRanking} />
+        {/* <DataTable columns={columns} data={streakHistory} /> */}
       </section>
     </main>
   );

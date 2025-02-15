@@ -4,22 +4,19 @@ import { currentUser } from "@clerk/nextjs/server";
 export async function getUserStats() {
   const user = await currentUser();
 
-  if (!user) return {};
-
-  const email = user.primaryEmailAddress?.emailAddress;
+  const email = user?.primaryEmailAddress?.emailAddress;
 
   try {
-    const streakData = await prisma.streak.findUnique({
+    const streaks = await prisma.streak.findMany({
       where: { email },
+      orderBy: { streakStart: "desc" },
     });
 
-    if (!streakData) return {};
-
-    const openHistoryData = await prisma.webhookData.findMany({
+    const openedNews = await prisma.webhookData.findMany({
       where: {
         email,
         createdAt: {
-          gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+          gte: new Date(new Date().setDate(new Date().getDate() - 30)), // últimos 30 dias
         },
       },
       orderBy: {
@@ -27,27 +24,9 @@ export async function getUserStats() {
       },
     });
 
-    const lastOpen = openHistoryData[0]?.createdAt ?? null;
-    const today = new Date();
-
-    const history = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-
-      return {
-        date,
-        accessed: openHistoryData.some(
-          (entry) => entry.createdAt.toDateString() === date.toDateString()
-        ),
-        isSunday: date.getDay() === 0,
-      };
-    }).reverse();
-
     return {
-      history,
-      streak: streakData.streak,
-      openHistory: openHistoryData,
-      lastOpen: lastOpen ? lastOpen.toISOString() : null,
+      streaks,
+      openedNews,
     };
   } catch (error) {
     console.error("Erro ao buscar estatísticas do usuário: ", error);

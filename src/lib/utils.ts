@@ -22,7 +22,7 @@ export function formatDate(date: string | null) {
   });
 }
 
-export const getMotivationalMessage = (streak?: number) => {
+export function getMotivationalMessage(streak?: number) {
   if (!streak)
     return "Comece sua jornada! Abra sua primeira newsletter e dê o primeiro passo!";
 
@@ -46,9 +46,9 @@ export const getMotivationalMessage = (streak?: number) => {
     default:
       return "Continue assim, cada dia é uma vitória!";
   }
-};
+}
 
-export const getMotivationalRankingMessage = (position?: number) => {
+export function getMotivationalRankingMessage(position: number | null) {
   if (!position)
     return "Cada passo conta! Continue se dedicando e logo estará no topo!";
 
@@ -72,4 +72,19 @@ export const getMotivationalRankingMessage = (position?: number) => {
     default:
       return "Cada passo conta! Continue se dedicando e logo estará no topo!";
   }
-};
+}
+
+export function isConsecutive(
+  lastInteractionDate: Date,
+  currentDate: Date
+): boolean {
+  const diffInDays =
+    (currentDate.getTime() - lastInteractionDate.getTime()) /
+    (1000 * 3600 * 24);
+
+  return (
+    diffInDays === 1 &&
+    currentDate.getDay() !== 0 &&
+    lastInteractionDate.getDay() !== 0
+  );
+}
