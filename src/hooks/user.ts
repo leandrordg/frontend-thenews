@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getUserStats(email: string) {
+export async function getUserStats(email: string | undefined) {
   try {
     // Buscando o streak do usuário
     const streakData = await prisma.streak.findUnique({

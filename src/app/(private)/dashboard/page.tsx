@@ -1,38 +1,31 @@
-import { notFound } from "next/navigation";
-
 import { getUserStats } from "@/hooks/user";
 import { formatDate, formatStreaks } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs/server";
 import { CalendarIcon, ClockIcon, MailIcon } from "lucide-react";
 
+import { EmptyDashboard } from "@/components/empty-dashboard";
 import { HistoryCalendar } from "@/components/history-calendar";
 import { MotivationalMessage } from "@/components/motivational-message";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ email: string }>;
-}) {
-  const { email } = await searchParams;
+export default async function DashboardPage() {
+  const user = await currentUser();
 
-  const userStats = await getUserStats(email);
+  const userStats = await getUserStats(user?.primaryEmailAddress?.emailAddress);
 
-  if (!userStats) return notFound();
+  if (!userStats) return <EmptyDashboard />;
 
   return (
     <main className="max-w-7xl mx-auto p-4 py-16 space-y-8">
-      <h1 className="text-2xl font-bold">Dashboard do Leitor</h1>
+      <h1 className="text-2xl font-bold tracking-tight">Dashboard do leitor</h1>
 
       <MotivationalMessage streak={userStats.streak} />
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">
-              {/* Current Streak */}
-              Streak Atual
-            </CardTitle>
-            <div className="size-6 rounded-full bg-amber-300 flex items-center justify-center">
+            <CardTitle className="text-sm font-medium">Streak Atual</CardTitle>
+            <div className="size-7 rounded-full bg-[#FFCE04] flex items-center justify-center">
               <CalendarIcon className="size-4 text-foreground" />
             </div>
           </CardHeader>
@@ -50,7 +43,7 @@ export default async function DashboardPage({
             <CardTitle className="text-sm font-medium">
               Total de Aberturas
             </CardTitle>
-            <div className="size-6 rounded-full bg-amber-300 flex items-center justify-center">
+            <div className="size-7 rounded-full bg-[#FFCE04] flex items-center justify-center">
               <MailIcon className="size-4 text-foreground" />
             </div>
           </CardHeader>
@@ -66,7 +59,7 @@ export default async function DashboardPage({
             <CardTitle className="text-sm font-medium">
               Última Leitura
             </CardTitle>
-            <div className="size-6 rounded-full bg-amber-300 flex items-center justify-center">
+            <div className="size-7 rounded-full bg-[#FFCE04] flex items-center justify-center">
               <ClockIcon className="size-4 text-foreground" />
             </div>
           </CardHeader>
@@ -84,18 +77,6 @@ export default async function DashboardPage({
       <section className="space-y-6">
         <h2 className="text-xl font-semibold">Seu Streak de Leitura</h2>
         <HistoryCalendar history={userStats.history} />
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold">Estatísticas Gerais</h2>
-        <div className="mt-4">
-          <p>
-            <strong>Email:</strong> {email}
-          </p>
-          <p>
-            <strong>Streak:</strong> {userStats.streak} dias consecutivos
-          </p>
-        </div>
       </section>
     </main>
   );
