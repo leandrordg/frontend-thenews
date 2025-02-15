@@ -1,12 +1,19 @@
 import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
 
-export async function getUserStats(email: string | undefined) {
+export async function getUserStats() {
+  const user = await currentUser();
+
+  if (!user) return {};
+
+  const email = user.primaryEmailAddress?.emailAddress;
+
   try {
     const streakData = await prisma.streak.findUnique({
       where: { email },
     });
 
-    if (!streakData) throw new Error("Usuário não encontrado");
+    if (!streakData) return {};
 
     const openHistoryData = await prisma.webhookData.findMany({
       where: {

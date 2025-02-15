@@ -2,10 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { format, subDays } from "date-fns";
 
 export const getStreakRanking = async () => {
-  return await prisma.streak.findMany({
+  const ranking =  await prisma.streak.findMany({
     orderBy: { streak: "desc" },
     take: 10,
   });
+
+  // order and return position
+  return ranking.map((entry, index) => ({ ...entry, position: index + 1 }));
 };
 
 export const getDashboardStats = async () => {

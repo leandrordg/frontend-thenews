@@ -3,6 +3,20 @@ import { NextResponse } from "next/server";
 import { updateStreak } from "@/hooks/streak";
 import { prisma } from "@/lib/prisma";
 
+interface WebhookDataResponse {
+  data: {
+    id: string;
+    email: string;
+    status: string;
+    utm_source: string;
+    utm_medium: string;
+    utm_campaign: string;
+    utm_channel: string;
+    referring_site: string;
+    created_at: string;
+  };
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

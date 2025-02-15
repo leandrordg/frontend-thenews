@@ -1,23 +1,18 @@
+import { getStreakRanking } from "@/hooks/streak";
 import { getUserStats } from "@/hooks/user";
 import { formatDate, formatStreaks } from "@/lib/utils";
-import { currentUser } from "@clerk/nextjs/server";
 import { CalendarIcon, ClockIcon, MailIcon } from "lucide-react";
 
 import { EmptyDashboard } from "@/components/empty-dashboard";
 import { HistoryCalendar } from "@/components/history-calendar";
 import { MotivationalMessage } from "@/components/motivational-message";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/streaks/data-table";
+import { MotivationalRankingMessage } from "@/components/motivational-ranking-message";
 import { columns } from "@/components/streaks/columns";
-import { getStreakRanking } from "@/hooks/streak";
+import { DataTable } from "@/components/streaks/data-table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-
-  // usuário sempre vai existir, pois a rota é protegida pelo middleware
-  const { streak, history, lastOpen, openHistory } = await getUserStats(
-    user?.primaryEmailAddress?.emailAddress
-  );
+  const { streak, history, lastOpen, openHistory } = await getUserStats();
 
   const streakRanking = await getStreakRanking();
 
@@ -80,15 +75,18 @@ export default async function DashboardPage() {
         <h2 className="text-xl font-semibold">
           Seu histórico de leituras diárias
         </h2>
+
         <HistoryCalendar history={history} />
       </section>
 
       <section className="space-y-6">
         <h2 className="text-xl font-semibold">Classificação geral</h2>
         <p className="text-muted-foreground">
-          Compare sua streak com a de outros leitores. Em breve, teremos mais
-          informações sobre isso.
+          Veja como você está se saindo em relação aos outros leitores. Continue
+          lendo diariamente para subir no ranking!
         </p>
+
+        <MotivationalRankingMessage streakRanking={streakRanking} />
 
         <DataTable columns={columns} data={streakRanking} />
       </section>
