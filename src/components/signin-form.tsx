@@ -9,13 +9,13 @@ import { ChevronRightIcon, LoaderIcon, SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function LoginForm() {
+export function SignInForm() {
   return (
     <SignIn.Root>
       <SignIn.Step name="start" className="flex flex-col gap-4">
         <Clerk.GlobalError className="block text-sm text-red-400" />
 
-        <Clerk.Field name="identifier" className="space-y-2">
+        <Clerk.Field name="identifier" className="flex flex-col gap-2">
           <Clerk.Label className="text-sm font-medium">Email</Clerk.Label>
 
           <Clerk.Input type="text" required asChild>
@@ -29,11 +29,7 @@ export function LoginForm() {
           <Button type="submit" size="lg" className="w-full">
             <Clerk.Loading>
               {(isLoading) =>
-                isLoading ? (
-                  <LoaderIcon className="animate-spin" />
-                ) : (
-                  "fazer login"
-                )
+                isLoading ? <LoaderIcon className="animate-spin" /> : "avançar"
               }
             </Clerk.Loading>
           </Button>
@@ -57,9 +53,8 @@ export function LoginForm() {
           <p className="text-muted-foreground">
             Nós enviamos um código para o email:{" "}
             <span className="font-medium">
-              <SignIn.SafeIdentifier />
+              <SignIn.SafeIdentifier />.
             </span>
-            .
           </p>
 
           <Clerk.Field name="code" className="flex flex-col gap-2 mt-4">

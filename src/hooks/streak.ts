@@ -1,25 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { format, subDays } from "date-fns";
 
-export const getReaderStats = async (email: string) => {
-  const streak = await prisma.streak.findUnique({
-    where: { email },
+export const getStreakRanking = async () => {
+  return await prisma.streak.findMany({
+    orderBy: { streak: "desc" },
+    take: 10,
   });
-
-  if (!streak) {
-    return { streak: 0, history: [] };
-  }
-
-  const history = await prisma.webhookData.findMany({
-    where: { email },
-    orderBy: { createdAt: "asc" },
-  });
-
-  return { streak: streak.streak, history };
 };
 
 export const getDashboardStats = async () => {
   const totalSubscribers = await prisma.webhookData.count();
+
   const totalOpens = await prisma.webhookData.count({
     where: { status: "active" },
   });

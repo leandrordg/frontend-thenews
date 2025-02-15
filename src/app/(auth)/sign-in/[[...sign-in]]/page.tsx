@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { LoginForm } from "@/components/login-form";
+import { SignInForm } from "@/components/signin-form";
 
 export default function SignInPage() {
   return (
@@ -22,7 +22,7 @@ export default function SignInPage() {
       </section>
 
       <section className="max-w-xl mx-auto">
-        <LoginForm />
+        <SignInForm />
       </section>
     </main>
   );

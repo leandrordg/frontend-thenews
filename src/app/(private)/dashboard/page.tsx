@@ -7,6 +7,9 @@ import { EmptyDashboard } from "@/components/empty-dashboard";
 import { HistoryCalendar } from "@/components/history-calendar";
 import { MotivationalMessage } from "@/components/motivational-message";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DataTable } from "@/components/streaks/data-table";
+import { columns } from "@/components/streaks/columns";
+import { getStreakRanking } from "@/hooks/streak";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -15,6 +18,8 @@ export default async function DashboardPage() {
   const { streak, history, lastOpen, openHistory } = await getUserStats(
     user?.primaryEmailAddress?.emailAddress
   );
+
+  const streakRanking = await getStreakRanking();
 
   if (!openHistory) return <EmptyDashboard />;
 
@@ -33,7 +38,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatStreaks(streak)}</div>
+            <p className="text-2xl font-bold">{formatStreaks(streak)}</p>
             <p className="text-xs text-muted-foreground">
               Continue lendo diariamente!
             </p>
@@ -49,7 +54,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{openHistory.length}</div>
+            <p className="text-2xl font-bold">{openHistory.length}</p>
             <p className="text-xs text-muted-foreground">Newsletters lidas</p>
           </CardContent>
         </Card>
@@ -63,7 +68,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatDate(lastOpen)}</div>
+            <p className="text-2xl font-bold">{formatDate(lastOpen)}</p>
             <p className="text-xs text-muted-foreground">
               Leitura mais recente
             </p>
@@ -72,8 +77,20 @@ export default async function DashboardPage() {
       </div>
 
       <section className="space-y-6">
-        <h2 className="text-xl font-semibold">Seu Streak de Leitura</h2>
+        <h2 className="text-xl font-semibold">
+          Seu histórico de leituras diárias
+        </h2>
         <HistoryCalendar history={history} />
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-xl font-semibold">Classificação geral</h2>
+        <p className="text-muted-foreground">
+          Compare sua streak com a de outros leitores. Em breve, teremos mais
+          informações sobre isso.
+        </p>
+
+        <DataTable columns={columns} data={streakRanking} />
       </section>
     </main>
   );

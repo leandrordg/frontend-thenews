@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
-import { LogInIcon } from "lucide-react";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
+import { SignInDialog } from "@/components/signin-dialog";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
 import { UserMenu } from "@/components/user-menu";
 
 export function Header() {
@@ -21,11 +20,7 @@ export function Header() {
         <div className="flex items-center gap-4 ml-auto">
           <ThemeToggle />
           <SignedOut>
-            <SignInButton mode="modal">
-              <Button>
-                fazer login <LogInIcon />
-              </Button>
-            </SignInButton>
+            <SignInDialog />
           </SignedOut>
           <SignedIn>
             <UserMenu />

@@ -8,9 +8,10 @@ interface HistoryEntry {
 
 export function HistoryCalendar({ history }: { history: HistoryEntry[] }) {
   return (
-    <div className="space-y-2">
-      <div className="grid grid-cols-5 lg:grid-cols-14 gap-2">
+    <div className="space-y-4">
+      <div className="grid grid-cols-5 md:grid-cols-7 lg:grid-cols-14 gap-2">
         {history.map((day, i) => (
+          // FEATURE: no futuro, podemos adicionar um dialog para ver os conteúdos vistos em cada dia
           <div
             key={i}
             className={cn("aspect-square rounded-md select-none border", {
@@ -36,7 +37,7 @@ export function HistoryCalendar({ history }: { history: HistoryEntry[] }) {
         ))}
       </div>
 
-      <div className="flex items-center justify-end gap-4 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-end gap-4 text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <div className="size-3 rounded-sm bg-[#FFCE04] border" />
           <span>Acessado</span>

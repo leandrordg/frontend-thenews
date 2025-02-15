@@ -6,7 +6,7 @@ interface MotivationalMessageProps {
 
 export function MotivationalMessage({ streak }: MotivationalMessageProps) {
   return (
-    <div className="rounded-lg bg-muted p-4 text-primary">
+    <div className="border rounded-md p-4 shadow-2xs">
       <p className="font-medium">🚀 {getMessage(streak)}</p>
     </div>
   );
