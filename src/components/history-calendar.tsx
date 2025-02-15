@@ -7,25 +7,10 @@ interface HistoryEntry {
 }
 
 export function HistoryCalendar({ history }: { history: HistoryEntry[] }) {
-  const data = Array.from({ length: 30 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-
-    const dayStatus = history.find(
-      (entry) => new Date(entry.date).toDateString() === date.toDateString()
-    );
-
-    return {
-      date,
-      accessed: dayStatus ? dayStatus.accessed : false,
-      isSunday: date.getDay() === 0,
-    };
-  }).reverse();
-
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-5 lg:grid-cols-14 gap-2">
-        {data.map((day, i) => (
+        {history.map((day, i) => (
           <div
             key={i}
             className={cn("aspect-square rounded-md select-none border", {

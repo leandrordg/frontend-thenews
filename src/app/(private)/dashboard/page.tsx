@@ -11,15 +11,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default async function DashboardPage() {
   const user = await currentUser();
 
-  const userStats = await getUserStats(user?.primaryEmailAddress?.emailAddress);
+  // usuário sempre vai existir, pois a rota é protegida pelo middleware
+  const { streak, history, lastOpen, openHistory } = await getUserStats(
+    user?.primaryEmailAddress?.emailAddress
+  );
 
-  if (!userStats) return <EmptyDashboard />;
+  if (!openHistory) return <EmptyDashboard />;
 
   return (
     <main className="max-w-7xl mx-auto p-4 py-16 space-y-8">
       <h1 className="text-2xl font-bold tracking-tight">Dashboard do leitor</h1>
 
-      <MotivationalMessage streak={userStats.streak} />
+      <MotivationalMessage streak={streak} />
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -30,9 +33,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {formatStreaks(userStats.streak)}
-            </div>
+            <div className="text-2xl font-bold">{formatStreaks(streak)}</div>
             <p className="text-xs text-muted-foreground">
               Continue lendo diariamente!
             </p>
@@ -48,9 +49,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {userStats.openHistory.length}
-            </div>
+            <div className="text-2xl font-bold">{openHistory.length}</div>
             <p className="text-xs text-muted-foreground">Newsletters lidas</p>
           </CardContent>
         </Card>
@@ -64,9 +63,7 @@ export default async function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {formatDate(userStats.lastOpen)}
-            </div>
+            <div className="text-2xl font-bold">{formatDate(lastOpen)}</div>
             <p className="text-xs text-muted-foreground">
               Leitura mais recente
             </p>
@@ -76,7 +73,7 @@ export default async function DashboardPage() {
 
       <section className="space-y-6">
         <h2 className="text-xl font-semibold">Seu Streak de Leitura</h2>
-        <HistoryCalendar history={userStats.history} />
+        <HistoryCalendar history={history} />
       </section>
     </main>
   );
