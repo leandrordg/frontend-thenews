@@ -1,35 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
-export async function getUserStats() {
-  const user = await currentUser();
+export async function getCurrentUser() {
+  const authUser = await currentUser();
 
-  const email = user?.primaryEmailAddress?.emailAddress;
+  const email = authUser?.primaryEmailAddress?.emailAddress;
 
-  try {
-    const streaks = await prisma.streak.findMany({
-      where: { email },
-      orderBy: { streakStart: "desc" },
-    });
+  const user = await prisma.user.findUnique({ where: { email } });
 
-    const openedNews = await prisma.webhookData.findMany({
-      where: {
-        email,
-        createdAt: {
-          gte: new Date(new Date().setDate(new Date().getDate() - 30)), // últimos 30 dias
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  if (!user) throw new Error("Usuário não encontrado");
 
-    return {
-      streaks,
-      openedNews,
-    };
-  } catch (error) {
-    console.error("Erro ao buscar estatísticas do usuário: ", error);
-    throw new Error("Erro ao buscar estatísticas do usuário");
-  }
+  return user;
 }

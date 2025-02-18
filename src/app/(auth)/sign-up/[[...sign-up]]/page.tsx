@@ -1,8 +1,8 @@
 import Image from "next/image";
 
-import { SignInForm } from "@/components/signin-form";
+import { SignUpForm } from "@/components/signup-form";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
     <main className="max-w-7xl mx-auto p-4 py-16 space-y-8">
       <section className="md:text-center space-y-8">
@@ -16,13 +16,13 @@ export default function SignInPage() {
           </h3>
 
           <h1 className="text-2xl font-bold tracking-wide text-balance">
-            faça login e veja as suas estatísticas de leitura
+            crie uma conta e veja as suas estatísticas de leitura
           </h1>
         </div>
       </section>
 
-      <section className="md:max-w-xl mx-auto">
-        <SignInForm />
+      <section className="max-w-xl mx-auto">
+        <SignUpForm />
       </section>
     </main>
   );

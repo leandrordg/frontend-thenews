@@ -1,20 +1,16 @@
-import { getUserStats } from "@/hooks/user";
 import { CalendarIcon, ClockIcon, MailIcon } from "lucide-react";
 
 import { EmptyDashboard } from "@/components/empty-dashboard";
-import { MotivationalMessage } from "@/components/motivational-message";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function DashboardPage() {
-  const { streaks, openedNews } = await getUserStats();
-
-  if (!streaks.length && !openedNews.length) return <EmptyDashboard />;
+  if (Array.from({ length: 0 }).length === 0) return <EmptyDashboard />;
 
   return (
     <main className="max-w-7xl mx-auto p-4 py-16 space-y-8">
       <h1 className="text-2xl font-bold tracking-tight">Dashboard do leitor</h1>
 
-      <MotivationalMessage streaks={streaks} />
+      {/* <MotivationalMessage streaks={streaks} /> */}
 
       <div className="grid gap-4 md:grid-cols-3">
         <Card>

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
-import { ChevronRightIcon, LoaderIcon, SendIcon } from "lucide-react";
+import { ChevronRightIcon, EllipsisIcon, SendIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,18 +29,31 @@ export function SignInForm() {
           <Button type="submit" size="lg" className="w-full">
             <Clerk.Loading>
               {(isLoading) =>
-                isLoading ? <LoaderIcon className="animate-spin" /> : "avançar"
+                isLoading ? (
+                  <EllipsisIcon className="animate-pulse" />
+                ) : (
+                  "avançar"
+                )
               }
             </Clerk.Loading>
           </Button>
         </SignIn.Action>
 
-        <Button type="button" variant="link" className="w-full" asChild>
-          <Link href="https://thenewscc.beehiiv.com/">
-            quero ler mais notícias
-            <ChevronRightIcon />
-          </Link>
-        </Button>
+        <div className="flex items-center justify-center gap-4 flex-wrap">
+          <Button type="button" variant="link" asChild>
+            <Link href="https://thenewscc.beehiiv.com/">
+              quero ler mais notícias
+              <ChevronRightIcon />
+            </Link>
+          </Button>
+
+          <Button type="button" variant="link" asChild>
+            <Link href="/sign-up">
+              criar uma conta
+              <ChevronRightIcon />
+            </Link>
+          </Button>
+        </div>
       </SignIn.Step>
 
       <SignIn.Step
@@ -72,7 +85,7 @@ export function SignInForm() {
               <Clerk.Loading>
                 {(isLoading) =>
                   isLoading ? (
-                    <LoaderIcon className="animate-spin" />
+                    <EllipsisIcon className="animate-pulse" />
                   ) : (
                     <>
                       <SendIcon /> verificar
