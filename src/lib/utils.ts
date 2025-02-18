@@ -1,3 +1,4 @@
+import { Streak } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -7,19 +8,65 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatStreaks(streak: number) {
-  if (streak === 1) return "1 dia";
+export function formatStreaksProgress(streaks: Streak[]) {
+  const streak = streaks.find((streak) => streak.count);
 
-  return `${streak} dias`;
+  if (!streak) return `0 dias`;
+
+  return `${streak.count} dia${streak.count > 1 ? "s" : ""}`;
 }
 
-export function formatDate(date: string | null) {
-  if (!date) return "Nunca";
-
+export function formatLastStreakDate(date: Date) {
   return formatDistance(new Date(date), new Date(), {
     addSuffix: true,
     locale: ptBR,
   });
+}
+
+export function formatLastStreaksDate(streaks: Streak[]) {
+  const streak = streaks.sort(
+    (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+  )[0];
+
+  if (!streak) return `Nunca`;
+
+  return formatDistance(new Date(streak.createdAt), new Date(), {
+    addSuffix: true,
+    locale: ptBR,
+  });
+}
+
+export function formatLastStreaks(streaks: Streak[]) {
+  const now = new Date();
+  const last30DaysMap = new Map<
+    string,
+    { date: Date; count: number; isSunday: boolean }
+  >();
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date();
+    date.setDate(now.getDate() - i);
+    date.setHours(0, 0, 0, 0);
+    last30DaysMap.set(date.toISOString().split("T")[0], {
+      date,
+      count: 0,
+      isSunday: date.getDay() === 0,
+    });
+  }
+
+  streaks.forEach(({ startDate, lastDate, count }) => {
+    const start = new Date(startDate);
+    const end = new Date(lastDate);
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const key = d.toISOString().split("T")[0];
+      if (last30DaysMap.has(key) && !last30DaysMap.get(key)!.isSunday) {
+        last30DaysMap.get(key)!.count += count;
+      }
+    }
+  });
+
+  return Array.from(last30DaysMap.values()).reverse();
 }
 
 export function getMotivationalMessage(streak?: number) {
@@ -72,19 +119,4 @@ export function getMotivationalRankingMessage(position: number | null) {
     default:
       return "Cada passo conta! Continue se dedicando e logo estará no topo!";
   }
-}
-
-export function isConsecutive(
-  lastInteractionDate: Date,
-  currentDate: Date
-): boolean {
-  const diffInDays =
-    (currentDate.getTime() - lastInteractionDate.getTime()) /
-    (1000 * 3600 * 24);
-
-  return (
-    diffInDays === 1 &&
-    currentDate.getDay() !== 0 &&
-    lastInteractionDate.getDay() !== 0
-  );
 }

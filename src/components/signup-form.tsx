@@ -32,13 +32,11 @@ export function SignUpForm() {
           )}
         </Clerk.Loading>
 
-        <Clerk.Field name="emailAddress" className="flex flex-col gap-2">
-          <Clerk.Label className="text-sm font-medium">
-            Digite seu email
-          </Clerk.Label>
+        <Clerk.Field name="identifier" className="flex flex-col gap-2">
+          <Clerk.Label className="text-sm font-medium">Email</Clerk.Label>
 
-          <Clerk.Input type="email" required asChild>
-            <Input placeholder="Digite aqui..." />
+          <Clerk.Input type="text" required asChild>
+            <Input type="email" placeholder="Digite o seu e-mail" />
           </Clerk.Input>
 
           <Clerk.FieldError className="block text-sm text-red-400" />

@@ -1,38 +1,45 @@
-import { cn } from "@/lib/utils";
+import { cn, formatLastStreaks } from "@/lib/utils";
+import { Streak } from "@prisma/client";
+import { formatDate } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-interface HistoryEntry {
-  date: Date;
-  accessed: boolean;
-  isSunday: boolean;
+interface HistoryCalendarProps {
+  streaks: Streak[];
 }
 
-export function HistoryCalendar({ history }: { history: HistoryEntry[] }) {
+export function HistoryCalendar({ streaks }: HistoryCalendarProps) {
+  const lastStreaks = formatLastStreaks(streaks);
+
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-5 md:grid-cols-7 lg:grid-cols-14 gap-2">
-        {history.map((day, i) => (
-          // FEATURE: no futuro, podemos adicionar um dialog para ver os conteúdos vistos em cada dia
+      <div className="grid grid-cols-7 gap-2">
+        {Array.from({ length: 7 }, (_, i) => (
           <div
             key={i}
-            className={cn("aspect-square rounded-md select-none border", {
-              "bg-[#FFCE04] cursor-pointer": day.accessed,
-              "bg-muted": !day.accessed,
-              "bg-card cursor-not-allowed": day.isSunday,
-            })}
+            className="text-xs text-center font-medium rounded-md bg-transparent text-muted-foreground truncate"
           >
-            <div className="flex items-center justify-center h-full">
-              <span
-                className={cn(
-                  "text-xs font-semibold",
-                  day.accessed ? "text-black/80" : "text-muted-foreground"
-                )}
-              >
-                {day.date.toLocaleDateString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                })}
-              </span>
-            </div>
+            {formatDate(new Date(0, 0, i), "E", { locale: ptBR })}
+          </div>
+        ))}
+
+        {Array.from({ length: lastStreaks[0].date.getDay() }, (_, i) => (
+          <div key={`empty-${i}`} className="p-4 rounded-md bg-transparent" />
+        ))}
+
+        {lastStreaks.map((day, i) => (
+          <div
+            key={i}
+            className={cn(
+              "text-xs font-medium p-4 rounded-md border flex items-center justify-center select-none",
+              {
+                "bg-[#FFCE04] text-black/90": day.count > 0,
+                "bg-transparent text-muted-foreground": day.count === 0,
+                "bg-muted text-muted-foreground cursor-not-allowed":
+                  day.isSunday,
+              }
+            )}
+          >
+            <span>{formatDate(day.date, "dd/MM", { locale: ptBR })}</span>
           </div>
         ))}
       </div>
@@ -43,11 +50,11 @@ export function HistoryCalendar({ history }: { history: HistoryEntry[] }) {
           <span>Acessado</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="size-3 rounded-sm bg-muted border" />
+          <div className="size-3 rounded-sm bg-transparent border" />
           <span>Não acessado</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="size-3 rounded-sm bg-card border" />
+          <div className="size-3 rounded-sm bg-muted cursor-not-allowed" />
           <span>Domingo (desabilitado)</span>
         </div>
       </div>

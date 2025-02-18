@@ -4,7 +4,12 @@ import Link from "next/link";
 
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
-import { ChevronRightIcon, EllipsisIcon, SendIcon } from "lucide-react";
+import {
+  ChevronRightIcon,
+  EllipsisIcon,
+  SendIcon,
+  UserRoundPlusIcon,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +19,23 @@ export function SignInForm() {
     <SignIn.Root>
       <SignIn.Step name="start" className="flex flex-col gap-4">
         <Clerk.GlobalError className="block text-sm text-red-400" />
+
+        <Clerk.Loading scope="provider:google">
+          {(isLoading) => (
+            <Clerk.Connection name="google" disabled={isLoading} asChild>
+              <Button variant="outline">
+                {isLoading ? (
+                  <EllipsisIcon className="animate-pulse" />
+                ) : (
+                  <>
+                    <Clerk.Icon />
+                    Continuar com Google
+                  </>
+                )}
+              </Button>
+            </Clerk.Connection>
+          )}
+        </Clerk.Loading>
 
         <Clerk.Field name="identifier" className="flex flex-col gap-2">
           <Clerk.Label className="text-sm font-medium">Email</Clerk.Label>
@@ -50,7 +72,7 @@ export function SignInForm() {
           <Button type="button" variant="link" asChild>
             <Link href="/sign-up">
               criar uma conta
-              <ChevronRightIcon />
+              <UserRoundPlusIcon />
             </Link>
           </Button>
         </div>
