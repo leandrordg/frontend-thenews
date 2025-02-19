@@ -9,7 +9,7 @@ export const getUserStreaks = async () => {
       userId: user.id,
     },
     orderBy: {
-      createdAt: "desc",
+      startDate: "desc",
     },
   });
 };
@@ -19,7 +19,7 @@ export const getStreaksRanking = async () => {
 
   const streaks = await prisma.streak.findMany({
     orderBy: {
-      createdAt: "desc",
+      count: "desc",
     },
     include: {
       user: true,
@@ -32,7 +32,7 @@ export const getStreaksRanking = async () => {
     position: index + 1,
   }));
 
-  const myRanking = ranking.find((streak) => streak.user.id === user.id);
+  const myRanking = ranking.find((streak) => streak.userId === user.id);
 
   return {
     ranking,

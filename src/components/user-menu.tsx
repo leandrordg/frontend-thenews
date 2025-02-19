@@ -22,6 +22,7 @@ export async function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" className="relative">
           <UserRoundIcon />
+          <span className="sr-only">Abrir menu de usuário</span>
           {/* TODO: adicionar uma div envolta com o progresso dos níveis para gamificação */}
         </Button>
       </DropdownMenuTrigger>

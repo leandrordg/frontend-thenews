@@ -6,9 +6,11 @@ interface MotivationalMessageProps {
 }
 
 export function MotivationalMessage({ streaks }: MotivationalMessageProps) {
+  const message = getMotivationalMessage(streaks.length);
+
   return (
     <div className="border rounded-md p-4 shadow-2xs">
-      <p className="font-medium">🚀 {getMotivationalMessage(streaks.length)}</p>
+      <p className="font-medium">🚀 {message}</p>
     </div>
   );
 }

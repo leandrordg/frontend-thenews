@@ -2,7 +2,7 @@ import { CalendarIcon, ClockIcon, MailIcon } from "lucide-react";
 
 import { getUserEngagements } from "@/hooks/engagement";
 import { getStreaksRanking, getUserStreaks } from "@/hooks/streaks";
-import { formatLastStreaksDate, formatStreaksProgress } from "@/lib/utils";
+import { formatLastEngagementDate, formatStreaksProgress } from "@/lib/utils";
 
 import { EmptyDashboard } from "@/components/empty-dashboard";
 import { HistoryCalendar } from "@/components/history-calendar";
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {formatLastStreaksDate(streaks)}
+              {formatLastEngagementDate(engagements)}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
               Leitura mais recente

@@ -1,4 +1,4 @@
-import { getMotivationalRankingMessage } from "@/lib/utils";
+import { getMotivationalMessage } from "@/lib/utils";
 import { Streak, User } from "@prisma/client";
 
 interface MotivationalMessageProps {
@@ -8,16 +8,16 @@ interface MotivationalMessageProps {
   };
 }
 
-export async function MotivationalRankingMessage({
+export function MotivationalRankingMessage({
   streak,
 }: MotivationalMessageProps) {
   if (!streak) return null;
 
+  const message = getMotivationalMessage(streak.position);
+
   return (
     <div className="border rounded-md p-4 shadow-2xs">
-      <p className="font-medium">
-        🏆 {getMotivationalRankingMessage(streak.position)}
-      </p>
+      <p className="font-medium">🏆 {message}</p>
     </div>
   );
 }

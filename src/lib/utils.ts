@@ -1,4 +1,4 @@
-import { Streak } from "@prisma/client";
+import { Engagement, Streak } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { formatDistance } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -23,14 +23,14 @@ export function formatLastStreakDate(date: Date) {
   });
 }
 
-export function formatLastStreaksDate(streaks: Streak[]) {
-  const streak = streaks.sort(
-    (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+export function formatLastEngagementDate(engagements: Engagement[]) {
+  const lastEngagement = engagements.sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
   )[0];
 
-  if (!streak) return `Nunca`;
+  if (!lastEngagement) return `Nunca`;
 
-  return formatDistance(new Date(streak.createdAt), new Date(), {
+  return formatDistance(new Date(lastEngagement.createdAt), new Date(), {
     addSuffix: true,
     locale: ptBR,
   });
@@ -69,10 +69,7 @@ export function formatLastStreaks(streaks: Streak[]) {
   return Array.from(last30DaysMap.values()).reverse();
 }
 
-export function getMotivationalMessage(streak?: number) {
-  if (!streak)
-    return "Comece sua jornada! Abra sua primeira newsletter e dê o primeiro passo!";
-
+export function getMotivationalMessage(streak: number) {
   switch (true) {
     case streak === 0:
       return "Comece sua jornada! Abra sua primeira newsletter e dê o primeiro passo!";
@@ -88,17 +85,12 @@ export function getMotivationalMessage(streak?: number) {
       return "Sensacional! Você está mostrando consistência e determinação!";
     case streak < 50:
       return "Incrível! Você está se mantendo super regular, continue assim!";
-    case streak >= 50:
-      return "Espetacular! Você está arrasando com essa consistência!";
     default:
-      return "Continue assim, cada dia é uma vitória!";
+      return "Espetacular! Você está arrasando com essa consistência!";
   }
 }
 
-export function getMotivationalRankingMessage(position: number | null) {
-  if (!position)
-    return "Cada passo conta! Continue se dedicando e logo estará no topo!";
-
+export function getMotivationalRankingMessage(position: number) {
   switch (true) {
     case position === 1:
       return "TOP 1! Você está no topo do ranking! Continue dominando!";
